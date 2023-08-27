@@ -1,0 +1,18 @@
+<div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs.blog.title %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs.blog.content %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>

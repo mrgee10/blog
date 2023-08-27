@@ -1,0 +1,23 @@
+<%= render 'flashes' %>
+<% @blogs.each do |blog| %>
+    <div class="card mb-2 mt-2">
+        <div class="card-header">
+            <%= blog.author.name %>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">
+                <%= blog.title %>
+            </h3>
+            <h6 class="card-subtitle mb-2 text-muted">
+                [<%= blog.author.email %>]
+                <br>
+                <small>date posted: <%= blog.created_at %></small>
+            </h6>
+            <p class="card-text">
+                <%= blog.content %>
+            </p>
+            <%= link_to "Add Feedback", '/feedback/' + blog.id.to_s + '/new', class: "btn btn-sm btn-warning" %>
+            <%= link_to "View Feedback", '/feedback/' + blog.id.to_s + '/show', class: "btn btn-sm btn-secondary" %>
+        </div>
+    </div>
+<% end %>

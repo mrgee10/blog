@@ -1,0 +1,10 @@
+<%= form_for @feedbacks do |f| %>
+    <div class="mb-3">
+        <%= f.hidden_field :blog_id, { class: "form-control", placeholder: "ID here..", value: @blog_id } %>
+    </div>
+    <div class="mb-3">
+        <%= f.label "Content", class: "form-label" %>
+        <%= f.text_area :content, { class: "form-control", placeholder: "Content here.." } %>
+    </div>
+    <%= f.submit :value => 'Post Feedback', :class => 'btn btn-lg btn-success btn-flat'  %>
+<% end %>
