@@ -2,6 +2,13 @@
 <!-- PROJECT LOGO -->
 <br />
 
+### Built With
+
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+* [![Next][Next.js]][Next-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+
 ## Frameworks and libraries
 
 [Active Record], [Active Model], [Action Pack], and [Action View] can each be used independently outside Rails.
@@ -49,3 +56,8 @@ In addition to that, Rails also comes with:
    Run with `--help` or `-h` for options.
 
 4. Go to `http://127.0.0.1:3000` and you'll see the Rails bootscreen with your Rails and Ruby versions.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
+[Bootstrap-url]: https://getbootstrap.com
