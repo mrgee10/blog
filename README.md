@@ -59,6 +59,22 @@ In addition to that, Rails also comes with:
 
 4. Go to `http://127.0.0.1:3000` and you'll see the Rails bootscreen with your Rails and Ruby versions.
 
+## How to RUN
+
+1. Run database migration:
+
+        $ rails db:migrate
+
+        $ bin/rails db:migrate RAILS_ENV=test
+
+2. Create dummy data (optional)
+
+        $ rails db:seed
+
+3. Run the server
+
+        $ rails s
+
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
