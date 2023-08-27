@@ -1,0 +1,1848 @@
+  [1m[35m (4.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (3.8ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateAuthors (20230827124459)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "authors" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20230827124459"]]
+  [1m[36mTRANSACTION (3.3ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateBlogs (20230827124527)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "blogs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "content" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20230827124527"]]
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateFeedbacks (20230827124550)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE TABLE "feedbacks" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "content" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20230827124550"]]
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddAuthorToBlogs (20230827124710)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ablogs" ("id" integer NOT NULL PRIMARY KEY, "title" varchar DEFAULT NULL, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "ablogs" ("id","title","content","created_at","updated_at")
+                     SELECT "id","title","content","created_at","updated_at" FROM "blogs"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mDROP TABLE "blogs"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "blogs" ("id" integer NOT NULL PRIMARY KEY, "title" varchar DEFAULT NULL, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "author_id" integer NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "blogs" ("id","title","content","created_at","updated_at")
+                     SELECT "id","title","content","created_at","updated_at" FROM "ablogs"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ablogs"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_blogs_on_author_id" ON "blogs" ("author_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "ablogs" ("id" integer NOT NULL PRIMARY KEY, "title" varchar DEFAULT NULL, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "author_id" integer NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_ablogs_on_author_id" ON "ablogs" ("author_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "ablogs" ("id","title","content","created_at","updated_at","author_id")
+                     SELECT "id","title","content","created_at","updated_at","author_id" FROM "blogs"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "blogs"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "blogs" ("id" integer NOT NULL PRIMARY KEY, "title" varchar DEFAULT NULL, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "author_id" integer NOT NULL, CONSTRAINT "fk_rails_875c2b8fca"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_blogs_on_author_id" ON "blogs" ("author_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "blogs" ("id","title","content","created_at","updated_at","author_id")
+                     SELECT "id","title","content","created_at","updated_at","author_id" FROM "ablogs"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "ablogs"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20230827124710"]]
+  [1m[36mTRANSACTION (3.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to AddBlogToFeedbacks (20230827124751)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "afeedbacks" ("id" integer NOT NULL PRIMARY KEY, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "afeedbacks" ("id","content","created_at","updated_at")
+                     SELECT "id","content","created_at","updated_at" FROM "feedbacks"[0m
+  [1m[35m (1.0ms)[0m  [1m[35mDROP TABLE "feedbacks"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "feedbacks" ("id" integer NOT NULL PRIMARY KEY, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "blog_id" integer NOT NULL)[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "feedbacks" ("id","content","created_at","updated_at")
+                     SELECT "id","content","created_at","updated_at" FROM "afeedbacks"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "afeedbacks"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_feedbacks_on_blog_id" ON "feedbacks" ("blog_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "afeedbacks" ("id" integer NOT NULL PRIMARY KEY, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "blog_id" integer NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_afeedbacks_on_blog_id" ON "afeedbacks" ("blog_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[32mINSERT INTO "afeedbacks" ("id","content","created_at","updated_at","blog_id")
+                     SELECT "id","content","created_at","updated_at","blog_id" FROM "feedbacks"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE "feedbacks"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "feedbacks" ("id" integer NOT NULL PRIMARY KEY, "content" text DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "blog_id" integer NOT NULL, CONSTRAINT "fk_rails_0308ff6af9"
+FOREIGN KEY ("blog_id")
+  REFERENCES "blogs" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_feedbacks_on_blog_id" ON "feedbacks" ("blog_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "feedbacks" ("id","content","created_at","updated_at","blog_id")
+                     SELECT "id","content","created_at","updated_at","blog_id" FROM "afeedbacks"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "afeedbacks"[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20230827124751"]]
+  [1m[36mTRANSACTION (4.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2023-08-27 12:49:37.784808"], ["updated_at", "2023-08-27 12:49:37.784808"]]
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:49:54 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering C:/Users/Ge/.gem/ruby/3.2.0/gems/railties-7.0.7.2/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered C:/Users/Ge/.gem/ruby/3.2.0/gems/railties-7.0.7.2/lib/rails/templates/rails/welcome/index.html.erb (Duration: 37.7ms | Allocations: 691)
+Completed 200 OK in 1930ms (Views: 51.8ms | ActiveRecord: 0.0ms | Allocations: 984134)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:54:24 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.9ms | Allocations: 411)
+  [1m[36mBlog Load (0.5ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  Rendered blogs/index.html.erb within layouts/application (Duration: 9.7ms | Allocations: 1731)
+  Rendered layout layouts/application.html.erb (Duration: 40.0ms | Allocations: 4856)
+Completed 500 Internal Server Error in 537ms (ActiveRecord: 0.5ms | Allocations: 301523)
+
+
+  
+LoadError (cannot load such file -- sassc):
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:56:52 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.2ms | Allocations: 411)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  Rendered blogs/index.html.erb within layouts/application (Duration: 6.8ms | Allocations: 1731)
+  Rendered layout layouts/application.html.erb (Duration: 15.9ms | Allocations: 4685)
+Completed 500 Internal Server Error in 361ms (ActiveRecord: 0.2ms | Allocations: 300118)
+
+
+  
+LoadError (cannot load such file -- sassc):
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:58:14 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.0ms | Allocations: 411)
+  [1m[36mBlog Load (0.4ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  Rendered blogs/index.html.erb within layouts/application (Duration: 8.5ms | Allocations: 1731)
+  Rendered layout layouts/application.html.erb (Duration: 27.7ms | Allocations: 4780)
+Completed 500 Internal Server Error in 450ms (ActiveRecord: 0.4ms | Allocations: 300222)
+
+
+  
+LoadError (cannot load such file -- sassc):
+  
+app/views/layouts/application.html.erb:9
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:59:20 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.2ms | Allocations: 411)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  Rendered blogs/index.html.erb within layouts/application (Duration: 6.4ms | Allocations: 1731)
+  Rendered layout layouts/application.html.erb (Duration: 3991.6ms | Allocations: 149944)
+Completed 200 OK in 4361ms (Views: 3998.7ms | ActiveRecord: 0.2ms | Allocations: 445300)
+
+
+Started GET "/new" for 127.0.0.1 at 2023-08-27 20:59:29 +0800
+Processing by BlogsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/new.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 201)
+  Rendered blogs/_form.html.erb (Duration: 63.7ms | Allocations: 5243)
+  Rendered blogs/new.html.erb within layouts/application (Duration: 66.5ms | Allocations: 5487)
+  Rendered layout layouts/application.html.erb (Duration: 82.9ms | Allocations: 12009)
+Completed 200 OK in 95ms (Views: 84.0ms | ActiveRecord: 0.5ms | Allocations: 16651)
+
+
+Started POST "/blogs" for 127.0.0.1 at 2023-08-27 20:59:44 +0800
+Processing by BlogsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "blog"=>{"author_attributes"=>{"name"=>"Gerald Valdez", "email"=>"valdez.glv@gmail.com"}, "title"=>"My first blog", "content"=>"This exciting"}, "commit"=>"Post blog"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/blogs_controller.rb:9:in `create'
+  [1m[36mAuthor Create (2.0ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Gerald Valdez"], ["email", "valdez.glv@gmail.com"], ["created_at", "2023-08-27 12:59:44.169637"], ["updated_at", "2023-08-27 12:59:44.169637"]]
+  ↳ app/controllers/blogs_controller.rb:9:in `create'
+  [1m[36mBlog Create (0.4ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "My first blog"], ["content", "This exciting"], ["created_at", "2023-08-27 12:59:44.176056"], ["updated_at", "2023-08-27 12:59:44.176056"], ["author_id", 1]]
+  ↳ app/controllers/blogs_controller.rb:9:in `create'
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/blogs_controller.rb:9:in `create'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 101ms (ActiveRecord: 5.2ms | Allocations: 13016)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:59:44 +0800
+Processing by BlogsController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 200)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 4.7ms | Allocations: 3606)
+  Rendered layout layouts/application.html.erb (Duration: 25.4ms | Allocations: 10147)
+Completed 200 OK in 28ms (Views: 26.0ms | ActiveRecord: 0.6ms | Allocations: 10479)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 20:59:48 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 5.8ms | Allocations: 1464)
+  Rendered layout layouts/application.html.erb (Duration: 7.4ms | Allocations: 1547)
+Completed 500 Internal Server Error in 28ms (ActiveRecord: 0.6ms | Allocations: 4387)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/" for 127.0.0.1 at 2023-08-27 20:59:56 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 180)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.4ms | Allocations: 1561)
+  Rendered layout layouts/application.html.erb (Duration: 27.2ms | Allocations: 8102)
+Completed 200 OK in 33ms (Views: 30.6ms | ActiveRecord: 0.3ms | Allocations: 8399)
+
+
+Started GET "/feedback/1/new" for 127.0.0.1 at 2023-08-27 20:59:57 +0800
+Processing by FeedbacksController#new as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/new.html.erb within layouts/application
+  Rendered feedbacks/_flashes.html.erb (Duration: 0.7ms | Allocations: 342)
+  Rendered feedbacks/new.html.erb within layouts/application (Duration: 16.2ms | Allocations: 1775)
+  Rendered layout layouts/application.html.erb (Duration: 48.7ms | Allocations: 8375)
+Completed 200 OK in 58ms (Views: 51.0ms | ActiveRecord: 0.3ms | Allocations: 10828)
+
+
+Started POST "/feedbacks" for 127.0.0.1 at 2023-08-27 21:00:03 +0800
+Processing by FeedbacksController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "feedback"=>{"blog_id"=>"1", "content"=>"nice one"}, "commit"=>"Post Feedback"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mFeedback Create (1.4ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "nice one"], ["created_at", "2023-08-27 13:00:03.518407"], ["updated_at", "2023-08-27 13:00:03.518407"], ["blog_id", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 14ms (ActiveRecord: 4.0ms | Allocations: 4688)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:00:03 +0800
+Processing by BlogsController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 201)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 4.2ms | Allocations: 1578)
+  Rendered layout layouts/application.html.erb (Duration: 25.4ms | Allocations: 8114)
+Completed 200 OK in 28ms (Views: 26.0ms | ActiveRecord: 0.3ms | Allocations: 8405)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:00:06 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.8ms | Allocations: 1270)
+  Rendered layout layouts/application.html.erb (Duration: 23.4ms | Allocations: 7959)
+Completed 200 OK in 28ms (Views: 24.3ms | ActiveRecord: 0.6ms | Allocations: 8768)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:00:47 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 180)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.6ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 8.2ms | Allocations: 1550)
+  Rendered layout layouts/application.html.erb (Duration: 40.6ms | Allocations: 8081)
+Completed 200 OK in 47ms (Views: 41.9ms | ActiveRecord: 0.8ms | Allocations: 8369)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:00:50 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 0.4ms | Allocations: 940)
+  Rendered layout layouts/application.html.erb (Duration: 1.1ms | Allocations: 1021)
+Completed 500 Internal Server Error in 6ms (ActiveRecord: 0.1ms | Allocations: 1785)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:01:51 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.4ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 1.3ms | Allocations: 1151)
+  Rendered layout layouts/application.html.erb (Duration: 2.2ms | Allocations: 1233)
+Completed 500 Internal Server Error in 23ms (ActiveRecord: 0.4ms | Allocations: 2711)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content ?? "" %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:02:55 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 1.1ms | Allocations: 1151)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | Allocations: 1233)
+Completed 500 Internal Server Error in 12ms (ActiveRecord: 0.2ms | Allocations: 2712)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title != null ? @blogs.blog.title : "No feedback" %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:04:00 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.4ms | Allocations: 1078)
+  Rendered layout layouts/application.html.erb (Duration: 4.2ms | Allocations: 1160)
+Completed 500 Internal Server Error in 19ms (ActiveRecord: 0.5ms | Allocations: 4660)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title? %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:10:18 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.0ms | Allocations: 1171)
+  Rendered layout layouts/application.html.erb (Duration: 2.8ms | Allocations: 1254)
+Completed 500 Internal Server Error in 14ms (ActiveRecord: 0.4ms | Allocations: 2879)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs.blog.title? %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs? @blogs.blog.content %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>
+):
+1:    <div class="card mb-2 mt-2">
+2:        <div class="card-body">
+3:            <h3 class="card-title">
+4:                <%= @blogs.blog.title? %>
+5:            </h3>
+6:            <p class="card-text">
+7:                <%= @blogs? @blogs.blog.content %>
+8:                <h3>Feedbacks</h3>
+9:                <ul>
+10:                    <% @feedbacks.each do |feedback| %>
+11:                        <li>
+12:                            <%= feedback.content %>
+13:                        </li>
+14:                    <% end %>
+15:                </ul>
+16:            </p>
+17:        </div>
+18:    </div>
+  
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')', expecting ':'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')', expecting ':'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')', expecting ':'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')', expecting ':'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')', expecting ':'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')', expecting ':'
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:10:34 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.5ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 4.0ms | Allocations: 1150)
+  Rendered layout layouts/application.html.erb (Duration: 5.9ms | Allocations: 1232)
+Completed 500 Internal Server Error in 28ms (ActiveRecord: 0.5ms | Allocations: 2711)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title? %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs != null ? @blogs.blog.content : "" %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:13:11 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.6ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 1.7ms | Allocations: 1157)
+  Rendered layout layouts/application.html.erb (Duration: 3.1ms | Allocations: 1240)
+Completed 500 Internal Server Error in 18ms (ActiveRecord: 0.6ms | Allocations: 2720)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs.blog.title? %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs!nil %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>
+):
+1:    <div class="card mb-2 mt-2">
+2:        <div class="card-body">
+3:            <h3 class="card-title">
+4:                <%= @blogs.blog.title? %>
+5:            </h3>
+6:            <p class="card-text">
+7:                <%= @blogs!nil %>
+8:                <h3>Feedbacks</h3>
+9:                <ul>
+10:                    <% @feedbacks.each do |feedback| %>
+11:                        <li>
+12:                            <%= feedback.content %>
+13:                        </li>
+14:                    <% end %>
+15:                </ul>
+16:            </p>
+17:        </div>
+18:    </div>
+  
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '!', expecting ')'
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:13:17 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.5ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 1.7ms | Allocations: 1157)
+  Rendered layout layouts/application.html.erb (Duration: 3.6ms | Allocations: 1240)
+Completed 500 Internal Server Error in 28ms (ActiveRecord: 0.5ms | Allocations: 2720)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs.blog.title? %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs? %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>
+):
+1:    <div class="card mb-2 mt-2">
+2:        <div class="card-body">
+3:            <h3 class="card-title">
+4:                <%= @blogs.blog.title? %>
+5:            </h3>
+6:            <p class="card-text">
+7:                <%= @blogs? %>
+8:                <h3>Feedbacks</h3>
+9:                <ul>
+10:                    <% @feedbacks.each do |feedback| %>
+11:                        <li>
+12:                            <%= feedback.content %>
+13:                        </li>
+14:                    <% end %>
+15:                </ul>
+16:            </p>
+17:        </div>
+18:    </div>
+  
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected ')'
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:13:23 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.3ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 6.9ms | Allocations: 1160)
+  Rendered layout layouts/application.html.erb (Duration: 12.5ms | Allocations: 1243)
+Completed 500 Internal Server Error in 39ms (ActiveRecord: 0.3ms | Allocations: 2723)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs.blog.title? %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs?? %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>
+):
+1:    <div class="card mb-2 mt-2">
+2:        <div class="card-body">
+3:            <h3 class="card-title">
+4:                <%= @blogs.blog.title? %>
+5:            </h3>
+6:            <p class="card-text">
+7:                <%= @blogs?? %>
+8:                <h3>Feedbacks</h3>
+9:                <ul>
+10:                    <% @feedbacks.each do |feedback| %>
+11:                        <li>
+12:                            <%= feedback.content %>
+13:                        </li>
+14:                    <% end %>
+15:                </ul>
+16:            </p>
+17:        </div>
+18:    </div>
+  
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '?'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '?'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '?'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '?'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '?'
+app/views/feedbacks/show.html.erb:7: syntax error, unexpected '?'
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:14:42 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 3.0ms | Allocations: 1148)
+  Rendered layout layouts/application.html.erb (Duration: 3.6ms | Allocations: 1230)
+Completed 500 Internal Server Error in 12ms (ActiveRecord: 0.1ms | Allocations: 2709)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title? %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:14:48 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.7ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.8ms | Allocations: 1157)
+  Rendered layout layouts/application.html.erb (Duration: 4.7ms | Allocations: 1240)
+Completed 500 Internal Server Error in 28ms (ActiveRecord: 0.7ms | Allocations: 2720)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs? %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs.blog.content %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>
+):
+1:    <div class="card mb-2 mt-2">
+2:        <div class="card-body">
+3:            <h3 class="card-title">
+4:                <%= @blogs? %>
+5:            </h3>
+6:            <p class="card-text">
+7:                <%= @blogs.blog.content %>
+8:                <h3>Feedbacks</h3>
+9:                <ul>
+10:                    <% @feedbacks.each do |feedback| %>
+11:                        <li>
+12:                            <%= feedback.content %>
+13:                        </li>
+14:                    <% end %>
+15:                </ul>
+16:            </p>
+17:        </div>
+18:    </div>
+  
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected ')'
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:14:54 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.4ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 0.9ms | Allocations: 1157)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | Allocations: 1240)
+Completed 500 Internal Server Error in 13ms (ActiveRecord: 0.4ms | Allocations: 2720)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <div class="card mb-2 mt-2">
+    <div class="card-body">
+        <h3 class="card-title">
+            <%= @blogs! %>
+        </h3>
+        <p class="card-text">
+            <%= @blogs.blog.content %>
+            <h3>Feedbacks</h3>
+            <ul>
+                <% @feedbacks.each do |feedback| %>
+                    <li>
+                        <%= feedback.content %>
+                    </li>
+                <% end %>
+            </ul>
+        </p>
+    </div>
+</div>
+):
+1:    <div class="card mb-2 mt-2">
+2:        <div class="card-body">
+3:            <h3 class="card-title">
+4:                <%= @blogs! %>
+5:            </h3>
+6:            <p class="card-text">
+7:                <%= @blogs.blog.content %>
+8:                <h3>Feedbacks</h3>
+9:                <ul>
+10:                    <% @feedbacks.each do |feedback| %>
+11:                        <li>
+12:                            <%= feedback.content %>
+13:                        </li>
+14:                    <% end %>
+15:                </ul>
+16:            </p>
+17:        </div>
+18:    </div>
+  
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected '!', expecting ')'
+app/views/feedbacks/show.html.erb:4: syntax error, unexpected '!', expecting ')'
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:15:24 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.5ms | Allocations: 1148)
+  Rendered layout layouts/application.html.erb (Duration: 4.4ms | Allocations: 1230)
+Completed 500 Internal Server Error in 18ms (ActiveRecord: 0.2ms | Allocations: 2709)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    4:             <%= @blogs %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+    8:             <h3>Feedbacks</h3>
+    9:             <ul>
+   10:                 <% @feedbacks.each do |feedback| %>
+  
+app/views/feedbacks/show.html.erb:7
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:15:40 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.3ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 1.3ms | Allocations: 1148)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | Allocations: 1230)
+Completed 500 Internal Server Error in 16ms (ActiveRecord: 0.3ms | Allocations: 2709)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title? %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:15:43 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.3ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.0ms | Allocations: 1148)
+  Rendered layout layouts/application.html.erb (Duration: 3.7ms | Allocations: 1230)
+Completed 500 Internal Server Error in 23ms (ActiveRecord: 0.3ms | Allocations: 2709)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:21:01 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 3.6ms | Allocations: 2485)
+  Rendered layout layouts/application.html.erb (Duration: 4.3ms | Allocations: 2567)
+Completed 500 Internal Server Error in 15ms (ActiveRecord: 0.6ms | Allocations: 5784)
+
+
+  
+ActionView::Template::Error (undefined method `title' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:21:09 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 4.0ms | Allocations: 2539)
+  Rendered layout layouts/application.html.erb (Duration: 5.0ms | Allocations: 2621)
+Completed 500 Internal Server Error in 14ms (ActiveRecord: 0.6ms | Allocations: 5737)
+
+
+  
+ActionView::Template::Error (undefined method `title' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:21:17 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 0.3ms | Allocations: 864)
+  Rendered layout layouts/application.html.erb (Duration: 1.0ms | Allocations: 946)
+Completed 500 Internal Server Error in 11ms (ActiveRecord: 0.5ms | Allocations: 3944)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:22:14 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 0.3ms | Allocations: 888)
+  Rendered layout layouts/application.html.erb (Duration: 0.8ms | Allocations: 970)
+Completed 500 Internal Server Error in 8ms (ActiveRecord: 0.4ms | Allocations: 2913)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:22:19 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 0.3ms | Allocations: 864)
+  Rendered layout layouts/application.html.erb (Duration: 0.7ms | Allocations: 946)
+Completed 500 Internal Server Error in 10ms (ActiveRecord: 0.6ms | Allocations: 3944)
+
+
+  
+ActionView::Template::Error (undefined method `blog' for nil:NilClass):
+    1: <div class="card mb-2 mt-2">
+    2:     <div class="card-body">
+    3:         <h3 class="card-title">
+    4:             <%= @blogs.blog.title %>
+    5:         </h3>
+    6:         <p class="card-text">
+    7:             <%= @blogs.blog.content %>
+  
+app/views/feedbacks/show.html.erb:4
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:22:59 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/index.html.erb within layouts/application
+  Rendered feedbacks/index.html.erb within layouts/application (Duration: 0.7ms | Allocations: 112)
+  Rendered layout layouts/application.html.erb (Duration: 40.2ms | Allocations: 19543)
+Completed 200 OK in 51ms (Views: 42.8ms | ActiveRecord: 0.7ms | Allocations: 22551)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:23:23 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 8ms (ActiveRecord: 0.5ms | Allocations: 2821)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:23:24 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 1.1ms | Allocations: 353)
+  [1m[36mBlog Load (0.5ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 20.4ms | Allocations: 7585)
+  Rendered layout layouts/application.html.erb (Duration: 60.8ms | Allocations: 26490)
+Completed 200 OK in 70ms (Views: 62.4ms | ActiveRecord: 2.6ms | Allocations: 28396)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:23:37 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 203)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 12.9ms | Allocations: 7168)
+  Rendered layout layouts/application.html.erb (Duration: 43.9ms | Allocations: 26067)
+Completed 200 OK in 51ms (Views: 44.0ms | ActiveRecord: 1.6ms | Allocations: 28077)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:23:40 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 9ms (ActiveRecord: 0.5ms | Allocations: 2493)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:23:40 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 207)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.8ms | Allocations: 1580)
+  Rendered layout layouts/application.html.erb (Duration: 25.7ms | Allocations: 8124)
+Completed 200 OK in 29ms (Views: 26.8ms | ActiveRecord: 0.2ms | Allocations: 8415)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:23:45 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 5ms (ActiveRecord: 0.2ms | Allocations: 812)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:23:45 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.5ms | Allocations: 189)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 5.3ms | Allocations: 1559)
+  Rendered layout layouts/application.html.erb (Duration: 26.1ms | Allocations: 8119)
+Completed 200 OK in 29ms (Views: 26.9ms | ActiveRecord: 0.4ms | Allocations: 8409)
+
+
+Started GET "/feedback/1/new" for 127.0.0.1 at 2023-08-27 21:23:47 +0800
+Processing by FeedbacksController#new as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/new.html.erb within layouts/application
+  Rendered feedbacks/_flashes.html.erb (Duration: 2.3ms | Allocations: 335)
+  Rendered feedbacks/new.html.erb within layouts/application (Duration: 6.2ms | Allocations: 1515)
+  Rendered layout layouts/application.html.erb (Duration: 28.1ms | Allocations: 8116)
+Completed 200 OK in 34ms (Views: 29.7ms | ActiveRecord: 0.3ms | Allocations: 9871)
+
+
+Started POST "/feedbacks" for 127.0.0.1 at 2023-08-27 21:23:53 +0800
+Processing by FeedbacksController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "feedback"=>{"blog_id"=>"1", "content"=>"Nice blog"}, "commit"=>"Post Feedback"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mFeedback Create (1.5ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "Nice blog"], ["created_at", "2023-08-27 13:23:54.038220"], ["updated_at", "2023-08-27 13:23:54.038220"], ["blog_id", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mTRANSACTION (3.8ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 18ms (ActiveRecord: 5.7ms | Allocations: 4666)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:23:54 +0800
+Processing by BlogsController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 207)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.4ms | Allocations: 1623)
+  Rendered layout layouts/application.html.erb (Duration: 21.8ms | Allocations: 8155)
+Completed 200 OK in 24ms (Views: 22.6ms | ActiveRecord: 0.2ms | Allocations: 8485)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:23:56 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.4ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 4.1ms | Allocations: 1265)
+  Rendered layout layouts/application.html.erb (Duration: 22.6ms | Allocations: 7936)
+Completed 200 OK in 27ms (Views: 23.6ms | ActiveRecord: 0.6ms | Allocations: 8744)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:24:05 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 177)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 4.3ms | Allocations: 1547)
+  Rendered layout layouts/application.html.erb (Duration: 21.5ms | Allocations: 8076)
+Completed 200 OK in 24ms (Views: 22.3ms | ActiveRecord: 0.2ms | Allocations: 8366)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:24:07 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.8ms | Allocations: 1217)
+  Rendered layout layouts/application.html.erb (Duration: 23.5ms | Allocations: 7904)
+Completed 200 OK in 28ms (Views: 24.5ms | ActiveRecord: 0.4ms | Allocations: 8702)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:24:08 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.5ms | Allocations: 195)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 5.5ms | Allocations: 1565)
+  Rendered layout layouts/application.html.erb (Duration: 23.0ms | Allocations: 8212)
+Completed 200 OK in 26ms (Views: 23.9ms | ActiveRecord: 0.3ms | Allocations: 8502)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:24:10 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.4ms | Allocations: 1217)
+  Rendered layout layouts/application.html.erb (Duration: 19.6ms | Allocations: 7933)
+Completed 200 OK in 24ms (Views: 20.5ms | ActiveRecord: 0.3ms | Allocations: 8731)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:24:10 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 183)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.3ms | Allocations: 1553)
+  Rendered layout layouts/application.html.erb (Duration: 20.9ms | Allocations: 8162)
+Completed 200 OK in 24ms (Views: 21.8ms | ActiveRecord: 0.2ms | Allocations: 8452)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:24:11 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.6ms | Allocations: 1217)
+  Rendered layout layouts/application.html.erb (Duration: 30.0ms | Allocations: 7908)
+Completed 200 OK in 35ms (Views: 31.3ms | ActiveRecord: 0.4ms | Allocations: 8706)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:24:12 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 183)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 2.7ms | Allocations: 1553)
+  Rendered layout layouts/application.html.erb (Duration: 20.9ms | Allocations: 8082)
+Completed 200 OK in 23ms (Views: 21.7ms | ActiveRecord: 0.2ms | Allocations: 8372)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:24:12 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:18:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.1ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 2.4ms | Allocations: 1217)
+  Rendered layout layouts/application.html.erb (Duration: 21.3ms | Allocations: 7912)
+Completed 200 OK in 25ms (Views: 22.1ms | ActiveRecord: 0.4ms | Allocations: 8710)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:24:14 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 186)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.8ms | Allocations: 1556)
+  Rendered layout layouts/application.html.erb (Duration: 20.9ms | Allocations: 8085)
+Completed 200 OK in 24ms (Views: 22.0ms | ActiveRecord: 0.2ms | Allocations: 8375)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:38:08 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.4ms | Allocations: 567)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 37.3ms | Allocations: 14634)
+  Rendered layout layouts/application.html.erb (Duration: 183.0ms | Allocations: 63252)
+Completed 200 OK in 638ms (Views: 189.6ms | ActiveRecord: 1.3ms | Allocations: 358608)
+
+
+Started GET "/feedback/1/new" for 127.0.0.1 at 2023-08-27 21:38:10 +0800
+Processing by FeedbacksController#new as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/new.html.erb within layouts/application
+  Rendered feedbacks/_flashes.html.erb (Duration: 1.5ms | Allocations: 338)
+  Rendered feedbacks/new.html.erb within layouts/application (Duration: 18.1ms | Allocations: 2746)
+  Rendered layout layouts/application.html.erb (Duration: 41.6ms | Allocations: 9349)
+Completed 200 OK in 58ms (Views: 45.7ms | ActiveRecord: 0.5ms | Allocations: 13081)
+
+
+Started POST "/feedbacks" for 127.0.0.1 at 2023-08-27 21:38:15 +0800
+Processing by FeedbacksController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "feedback"=>{"blog_id"=>"1", "content"=>"More more"}, "commit"=>"Post Feedback"}
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:7:in `create'
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mBlog Load (0.4ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mFeedback Create (0.8ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "More more"], ["created_at", "2023-08-27 13:38:15.746786"], ["updated_at", "2023-08-27 13:38:15.746786"], ["blog_id", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+Completed 500 Internal Server Error in 25ms (ActiveRecord: 4.5ms | Allocations: 8193)
+
+
+  
+SyntaxError (C:/Ge Files/Ruby/core/v1/blogs/app/mailers/feedback_mailer.rb:7: syntax error, unexpected local variable or method, expecting ')'
+            subject: "New Feedback" 
+            ^~~~~~~
+):
+  
+app/mailers/feedback_mailer.rb:7: syntax error, unexpected local variable or method, expecting ')'
+app/mailers/feedback_mailer.rb:7: syntax error, unexpected local variable or method, expecting ')'
+app/mailers/feedback_mailer.rb:7: syntax error, unexpected local variable or method, expecting ')'
+app/controllers/feedbacks_controller.rb:11:in `create'
+Started GET "/feedback/1/new" for 127.0.0.1 at 2023-08-27 21:38:26 +0800
+Processing by FeedbacksController#new as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/new.html.erb within layouts/application
+  Rendered feedbacks/_flashes.html.erb (Duration: 0.4ms | Allocations: 188)
+  Rendered feedbacks/new.html.erb within layouts/application (Duration: 2.0ms | Allocations: 1081)
+  Rendered layout layouts/application.html.erb (Duration: 40.8ms | Allocations: 20044)
+Completed 200 OK in 50ms (Views: 42.5ms | ActiveRecord: 0.6ms | Allocations: 23211)
+
+
+Started POST "/feedbacks" for 127.0.0.1 at 2023-08-27 21:38:31 +0800
+Processing by FeedbacksController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "feedback"=>{"blog_id"=>"1", "content"=>"More more"}, "commit"=>"Post Feedback"}
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:7:in `create'
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mFeedback Create (1.1ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "More more"], ["created_at", "2023-08-27 13:38:31.355160"], ["updated_at", "2023-08-27 13:38:31.355160"], ["blog_id", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mTRANSACTION (3.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  Rendering layout layouts/mailer.html.erb
+  Rendering feedback_mailer/feedback_mailer.html.erb within layouts/mailer
+  Rendered feedback_mailer/feedback_mailer.html.erb within layouts/mailer (Duration: 0.7ms | Allocations: 128)
+  Rendered layout layouts/mailer.html.erb (Duration: 1.9ms | Allocations: 349)
+FeedbackMailer#feedback_mailer: processed outbound mail in 79.9ms
+Delivered mail 64eb51d8bfc1_11e03b74653ec@LAPTOP-93E4LP71.mail (385.0ms)
+Date: Sun, 27 Aug 2023 21:38:32 +0800
+From: from@example.com
+To: valdez.glv@gmail.com
+Message-ID: <64eb51d8bfc1_11e03b74653ec@LAPTOP-93E4LP71.mail>
+Subject: New Feedback
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <h1>New feedback has been posted on your blog.</h1>
+
+More more
+  </body>
+</html>
+
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 1136ms (ActiveRecord: 5.5ms | Allocations: 82655)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:38:32 +0800
+Processing by BlogsController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.4ms | Allocations: 221)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 8.4ms | Allocations: 3092)
+  Rendered layout layouts/application.html.erb (Duration: 35.5ms | Allocations: 9855)
+Completed 200 OK in 42ms (Views: 37.0ms | ActiveRecord: 0.7ms | Allocations: 10450)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 21:38:39 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:21:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 4.1ms | Allocations: 1509)
+  Rendered layout layouts/application.html.erb (Duration: 24.8ms | Allocations: 8198)
+Completed 200 OK in 31ms (Views: 25.4ms | ActiveRecord: 0.5ms | Allocations: 9718)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:38:43 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 186)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.4ms | Allocations: 1556)
+  Rendered layout layouts/application.html.erb (Duration: 25.0ms | Allocations: 8103)
+Completed 200 OK in 27ms (Views: 25.7ms | ActiveRecord: 0.3ms | Allocations: 8393)
+
+
+Started GET "/feedback/1/new" for 127.0.0.1 at 2023-08-27 21:38:46 +0800
+Processing by FeedbacksController#new as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/new.html.erb within layouts/application
+  Rendered feedbacks/_flashes.html.erb (Duration: 0.2ms | Allocations: 207)
+  Rendered feedbacks/new.html.erb within layouts/application (Duration: 1.4ms | Allocations: 987)
+  Rendered layout layouts/application.html.erb (Duration: 19.5ms | Allocations: 7522)
+Completed 200 OK in 22ms (Views: 20.6ms | ActiveRecord: 0.0ms | Allocations: 7825)
+
+
+Started POST "/feedbacks" for 127.0.0.1 at 2023-08-27 21:38:55 +0800
+Processing by FeedbacksController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "feedback"=>{"blog_id"=>"1", "content"=>"this the exciting part yehey"}, "commit"=>"Post Feedback"}
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:7:in `create'
+  [1m[36mAuthor Load (0.3ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:8:in `create'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mFeedback Create (1.7ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "this the exciting part yehey"], ["created_at", "2023-08-27 13:38:55.121679"], ["updated_at", "2023-08-27 13:38:55.121679"], ["blog_id", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  [1m[36mTRANSACTION (11.4ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/controllers/feedbacks_controller.rb:10:in `create'
+  Rendering layout layouts/mailer.html.erb
+  Rendering feedback_mailer/feedback_mailer.html.erb within layouts/mailer
+  Rendered feedback_mailer/feedback_mailer.html.erb within layouts/mailer (Duration: 0.3ms | Allocations: 9)
+  Rendered layout layouts/mailer.html.erb (Duration: 4.3ms | Allocations: 96)
+FeedbackMailer#feedback_mailer: processed outbound mail in 12.5ms
+Delivered mail 64eb51ef26c42_11e03b60654e5@LAPTOP-93E4LP71.mail (144.3ms)
+Date: Sun, 27 Aug 2023 21:38:55 +0800
+From: from@example.com
+To: valdez.glv@gmail.com
+Message-ID: <64eb51ef26c42_11e03b60654e5@LAPTOP-93E4LP71.mail>
+Subject: New Feedback
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      /* Email styles need to be inline */
+    </style>
+  </head>
+
+  <body>
+    <h1>New feedback has been posted on your blog.</h1>
+
+this the exciting part yehey
+  </body>
+</html>
+
+Redirected to http://127.0.0.1:3000/
+Completed 302 Found in 194ms (ActiveRecord: 13.8ms | Allocations: 8990)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:38:55 +0800
+Processing by BlogsController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.6ms | Allocations: 198)
+  [1m[36mBlog Load (0.4ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (1.0ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 12.1ms | Allocations: 1575)
+  Rendered layout layouts/application.html.erb (Duration: 61.2ms | Allocations: 8107)
+Completed 200 OK in 68ms (Views: 62.7ms | ActiveRecord: 1.3ms | Allocations: 8398)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:39:03 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.5ms | Allocations: 186)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 5.2ms | Allocations: 1556)
+  Rendered layout layouts/application.html.erb (Duration: 27.0ms | Allocations: 8086)
+Completed 200 OK in 29ms (Views: 27.5ms | ActiveRecord: 0.4ms | Allocations: 8374)
+
+
+Started GET "/new" for 127.0.0.1 at 2023-08-27 21:39:14 +0800
+Processing by BlogsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/new.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 201)
+  Rendered blogs/_form.html.erb (Duration: 4.5ms | Allocations: 3466)
+  Rendered blogs/new.html.erb within layouts/application (Duration: 6.9ms | Allocations: 3711)
+  Rendered layout layouts/application.html.erb (Duration: 28.6ms | Allocations: 10351)
+Completed 200 OK in 33ms (Views: 30.0ms | ActiveRecord: 0.0ms | Allocations: 10709)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:39:15 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 183)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.6ms | Allocations: 1553)
+  Rendered layout layouts/application.html.erb (Duration: 23.9ms | Allocations: 8091)
+Completed 200 OK in 27ms (Views: 25.0ms | ActiveRecord: 0.2ms | Allocations: 8382)
+
+
+Started GET "/new" for 127.0.0.1 at 2023-08-27 21:39:15 +0800
+Processing by BlogsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/new.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 198)
+  Rendered blogs/_form.html.erb (Duration: 2.2ms | Allocations: 2723)
+  Rendered blogs/new.html.erb within layouts/application (Duration: 2.6ms | Allocations: 2798)
+  Rendered layout layouts/application.html.erb (Duration: 21.9ms | Allocations: 9318)
+Completed 200 OK in 25ms (Views: 23.1ms | ActiveRecord: 0.0ms | Allocations: 9611)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:39:15 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.4ms | Allocations: 174)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.4ms | Allocations: 1544)
+  Rendered layout layouts/application.html.erb (Duration: 22.6ms | Allocations: 8073)
+Completed 200 OK in 25ms (Views: 23.5ms | ActiveRecord: 0.2ms | Allocations: 8363)
+
+
+Started GET "/new" for 127.0.0.1 at 2023-08-27 21:39:16 +0800
+Processing by BlogsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/new.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 183)
+  Rendered blogs/_form.html.erb (Duration: 1.7ms | Allocations: 2708)
+  Rendered blogs/new.html.erb within layouts/application (Duration: 2.3ms | Allocations: 2783)
+  Rendered layout layouts/application.html.erb (Duration: 22.1ms | Allocations: 9304)
+Completed 200 OK in 25ms (Views: 23.0ms | ActiveRecord: 0.0ms | Allocations: 9597)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:39:16 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.2ms | Allocations: 180)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 3.2ms | Allocations: 1550)
+  Rendered layout layouts/application.html.erb (Duration: 21.3ms | Allocations: 8200)
+Completed 200 OK in 24ms (Views: 22.6ms | ActiveRecord: 0.2ms | Allocations: 8491)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 21:40:11 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.3ms | Allocations: 573)
+  [1m[36mBlog Load (0.3ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 40.4ms | Allocations: 14645)
+  Rendered layout layouts/application.html.erb (Duration: 163.6ms | Allocations: 63128)
+Completed 200 OK in 519ms (Views: 168.4ms | ActiveRecord: 1.8ms | Allocations: 358482)
+
+
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.3ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Deedra Wilkinson"], ["email", "portia@yahoo.com"], ["created_at", "2023-08-27 13:53:59.006018"], ["updated_at", "2023-08-27 13:53:59.006018"]]
+  [1m[36mTRANSACTION (3.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (2.4ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Rogelio Ondricka"], ["email", "bernie@yahoo.com"], ["created_at", "2023-08-27 13:53:59.017838"], ["updated_at", "2023-08-27 13:53:59.017838"]]
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.1ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Ellsworth Goodwin Sr."], ["email", "michal@hotmail.com"], ["created_at", "2023-08-27 13:53:59.027601"], ["updated_at", "2023-08-27 13:53:59.027601"]]
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.7ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "The Hon. Terisa Purdy"], ["email", "rodney_block@yahoo.com"], ["created_at", "2023-08-27 13:53:59.034046"], ["updated_at", "2023-08-27 13:53:59.034046"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.2ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Moriah Wisoky VM"], ["email", "jordon@hotmail.com"], ["created_at", "2023-08-27 13:53:59.042485"], ["updated_at", "2023-08-27 13:53:59.042485"]]
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.0ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Mrs. Chia Leannon"], ["email", "herb_smitham@gmail.com"], ["created_at", "2023-08-27 13:53:59.052145"], ["updated_at", "2023-08-27 13:53:59.052145"]]
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.8ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Jerald Kuhic"], ["email", "devon@hotmail.com"], ["created_at", "2023-08-27 13:53:59.061404"], ["updated_at", "2023-08-27 13:53:59.061404"]]
+  [1m[36mTRANSACTION (3.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.7ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Tanner Rohan"], ["email", "margareta.mann@yahoo.com"], ["created_at", "2023-08-27 13:53:59.069388"], ["updated_at", "2023-08-27 13:53:59.069388"]]
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (2.2ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Marnie Weissnat"], ["email", "heriberto@hotmail.com"], ["created_at", "2023-08-27 13:53:59.077822"], ["updated_at", "2023-08-27 13:53:59.077822"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.8ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Ahmed Feeney"], ["email", "cameron@hotmail.com"], ["created_at", "2023-08-27 13:53:59.088641"], ["updated_at", "2023-08-27 13:53:59.088641"]]
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.0ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Roselle Nikolaus"], ["email", "milton@ratke-gerlach.test"], ["created_at", "2023-08-27 14:04:01.223566"], ["updated_at", "2023-08-27 14:04:01.223566"]]
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.6ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "An Evil Cradling"], ["content", "Everyone has an individual background. Someone may come from Python, someone else may come from Perl, and they may be surprised by different aspects of the language. Then they come up to me and say, 'I was surprised by this feature of the language, so therefore Ruby violates the principle of least surprise.' Wait. Wait. The principle of least surprise is not for you only."], ["created_at", "2023-08-27 14:04:01.241716"], ["updated_at", "2023-08-27 14:04:01.241716"], ["author_id", 13]]
+  [1m[36mTRANSACTION (2.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.6ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "This shirt is dry clean only. Which means it's dirty."], ["created_at", "2023-08-27 14:04:01.253297"], ["updated_at", "2023-08-27 14:04:01.253297"], ["blog_id", 1]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.7ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Yee Bogisich"], ["email", "jaime_kunze@lebsack-jaskolski.example"], ["created_at", "2023-08-27 14:04:01.257928"], ["updated_at", "2023-08-27 14:04:01.257928"]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.7ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "A Handful of Dust"], ["content", "Often people, especially computer engineers, focus on the machines. But in fact we need to focus on humans, on how humans care about doing programming or operating the application of the machines."], ["created_at", "2023-08-27 14:04:01.262585"], ["updated_at", "2023-08-27 14:04:01.262585"], ["author_id", 14]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.9ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "It's very dangerous to wave to people you don't know because what if they don't have hands? They'll think you're cocky."], ["created_at", "2023-08-27 14:04:01.267051"], ["updated_at", "2023-08-27 14:04:01.267051"], ["blog_id", 2]]
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.8ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Tracy Strosin"], ["email", "temple@reynolds-weimann.example"], ["created_at", "2023-08-27 14:04:01.272397"], ["updated_at", "2023-08-27 14:04:01.272397"]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.5ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "The Needle's Eye"], ["content", "In our daily lives as programmers, we process text strings a lot. So I tried to work hard on text processing, namely the string class and regular expressions. Regular expressions are built into the language and are very tuned up for use."], ["created_at", "2023-08-27 14:04:01.276938"], ["updated_at", "2023-08-27 14:04:01.276938"], ["author_id", 15]]
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.6ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "People teach their dogs to sit; it's a trick. I've been sitting my whole life, and a dog has never looked at me as though he thought I was tricky."], ["created_at", "2023-08-27 14:04:01.281055"], ["updated_at", "2023-08-27 14:04:01.281055"], ["blog_id", 3]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.5ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Carola Jenkins"], ["email", "porfirio@carroll.example"], ["created_at", "2023-08-27 14:04:01.285308"], ["updated_at", "2023-08-27 14:04:01.285308"]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.6ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "Nectar in a Sieve"], ["content", "I believe consistency and orthogonality are tools of design, not the primary goal in design."], ["created_at", "2023-08-27 14:04:01.289517"], ["updated_at", "2023-08-27 14:04:01.289517"], ["author_id", 16]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.5ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "Dogs are forever in the push up postion."], ["created_at", "2023-08-27 14:04:01.293524"], ["updated_at", "2023-08-27 14:04:01.293524"], ["blog_id", 4]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.4ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Kizzy Kulas"], ["email", "vernell_macejkovic@okeefe.test"], ["created_at", "2023-08-27 14:04:01.297708"], ["updated_at", "2023-08-27 14:04:01.297708"]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.5ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "Let Us Now Praise Famous Men"], ["content", "I believe that the purpose of life is, at least in part, to be happy. Based on this belief, Ruby is designed to make programming not only easy but also fun. It allows you to concentrate on the creative side of programming, with less stress."], ["created_at", "2023-08-27 14:04:01.301909"], ["updated_at", "2023-08-27 14:04:01.301909"], ["author_id", 17]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.7ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "Rice is great if you're really hungry and want to eat two thousand of something."], ["created_at", "2023-08-27 14:04:01.305935"], ["updated_at", "2023-08-27 14:04:01.305935"], ["blog_id", 5]]
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (1.3ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Fr. Manuel Lynch"], ["email", "kit@huel-treutel.example"], ["created_at", "2023-08-27 14:04:01.317373"], ["updated_at", "2023-08-27 14:04:01.317373"]]
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.7ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "Tiger! Tiger!"], ["content", "I hope to see Ruby help every programmer in the world to be productive, and to enjoy programming, and to be happy. That is the primary purpose of Ruby language."], ["created_at", "2023-08-27 14:04:01.323544"], ["updated_at", "2023-08-27 14:04:01.323544"], ["author_id", 18]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.7ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "My friend asked me if I wanted a frozen banana. I said 'No, but I want a regular banana later, so... yeah.'"], ["created_at", "2023-08-27 14:04:01.327883"], ["updated_at", "2023-08-27 14:04:01.327883"], ["blog_id", 6]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.7ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Al O'Hara"], ["email", "ashlyn@kirlin.example"], ["created_at", "2023-08-27 14:04:01.332715"], ["updated_at", "2023-08-27 14:04:01.332715"]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.7ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "The Doors of Perception"], ["content", "From the viewpoint of what you can do, therefore, languages do differ - but the differences are limited. For example, Python and Ruby provide almost the same power to the programmer."], ["created_at", "2023-08-27 14:04:01.337363"], ["updated_at", "2023-08-27 14:04:01.337363"], ["author_id", 19]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.5ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "I drank some boiling water because I wanted to whistle."], ["created_at", "2023-08-27 14:04:01.341454"], ["updated_at", "2023-08-27 14:04:01.341454"], ["blog_id", 7]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.7ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Columbus Wilkinson"], ["email", "jeffery.russel@cummings-damore.test"], ["created_at", "2023-08-27 14:04:01.345971"], ["updated_at", "2023-08-27 14:04:01.345971"]]
+  [1m[36mTRANSACTION (2.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.7ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "From Here to Eternity"], ["content", "The orthogonal features, when combined, can explode into complexity."], ["created_at", "2023-08-27 14:04:01.351799"], ["updated_at", "2023-08-27 14:04:01.351799"], ["author_id", 20]]
+  [1m[36mTRANSACTION (1.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.6ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "Every book is a children's book if the kid can read."], ["created_at", "2023-08-27 14:04:01.356169"], ["updated_at", "2023-08-27 14:04:01.356169"], ["blog_id", 8]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.6ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Sammie Pouros III"], ["email", "meghan_kreiger@mcdermott-hackett.example"], ["created_at", "2023-08-27 14:04:01.360658"], ["updated_at", "2023-08-27 14:04:01.360658"]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.5ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "Pale Kings and Princes"], ["content", "You want to enjoy life, don't you? If you get your job done quickly and your job is fun, that's good isn't it? That's the purpose of life, partly. Your life is better."], ["created_at", "2023-08-27 14:04:01.364782"], ["updated_at", "2023-08-27 14:04:01.364782"], ["author_id", 21]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.4ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "Dogs are forever in the push up postion."], ["created_at", "2023-08-27 14:04:01.368909"], ["updated_at", "2023-08-27 14:04:01.368909"], ["blog_id", 9]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mAuthor Create (0.5ms)[0m  [1m[32mINSERT INTO "authors" ("name", "email", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["name", "Deon Wiegand"], ["email", "vena.greenholt@hahn.example"], ["created_at", "2023-08-27 14:04:01.372944"], ["updated_at", "2023-08-27 14:04:01.372944"]]
+  [1m[36mTRANSACTION (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mBlog Create (0.7ms)[0m  [1m[32mINSERT INTO "blogs" ("title", "content", "created_at", "updated_at", "author_id") VALUES (?, ?, ?, ?, ?)[0m  [["title", "Where Angels Fear to Tread"], ["content", "It is not the responsibility of the language to force good looking code, but the language should make good looking code possible."], ["created_at", "2023-08-27 14:04:01.377258"], ["updated_at", "2023-08-27 14:04:01.377258"], ["author_id", 22]]
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFeedback Create (0.6ms)[0m  [1m[32mINSERT INTO "feedbacks" ("content", "created_at", "updated_at", "blog_id") VALUES (?, ?, ?, ?)[0m  [["content", "I wish I could play little league now. I'd be way better than before."], ["created_at", "2023-08-27 14:04:01.381967"], ["updated_at", "2023-08-27 14:04:01.381967"], ["blog_id", 10]]
+  [1m[36mTRANSACTION (1.6ms)[0m  [1m[36mcommit transaction[0m
+Started GET "/" for 127.0.0.1 at 2023-08-27 22:04:13 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 2.2ms | Allocations: 576)
+  [1m[36mBlog Load (0.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 13], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 14], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 15], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 16], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 17], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 18], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 19], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 20], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 21], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 22], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 59.7ms | Allocations: 21702)
+  Rendered layout layouts/application.html.erb (Duration: 186.9ms | Allocations: 70394)
+Completed 200 OK in 584ms (Views: 191.9ms | ActiveRecord: 3.5ms | Allocations: 365754)
+
+
+Started GET "/feedback/1/show" for 127.0.0.1 at 2023-08-27 22:04:18 +0800
+Processing by FeedbacksController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mFeedback Load (0.2ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ? LIMIT ?[0m  [["blog_id", 1], ["LIMIT", 1]]
+  ↳ app/controllers/feedbacks_controller.rb:21:in `show'
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/show.html.erb within layouts/application
+  [1m[36mBlog Load (1.2ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs" WHERE "blogs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/feedbacks/show.html.erb:4
+  [1m[36mFeedback Load (0.3ms)[0m  [1m[34mSELECT "feedbacks".* FROM "feedbacks" WHERE "feedbacks"."blog_id" = ?[0m  [["blog_id", 1]]
+  ↳ app/views/feedbacks/show.html.erb:10
+  Rendered feedbacks/show.html.erb within layouts/application (Duration: 9.0ms | Allocations: 2826)
+  Rendered layout layouts/application.html.erb (Duration: 35.6ms | Allocations: 9749)
+Completed 200 OK in 71ms (Views: 39.2ms | ActiveRecord: 2.5ms | Allocations: 14671)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-27 22:04:24 +0800
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 0.3ms | Allocations: 174)
+  [1m[36mBlog Load (0.1ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 13], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 14], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 15], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 16], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 17], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 18], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 19], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 20], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 21], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 22], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 20.3ms | Allocations: 8612)
+  Rendered layout layouts/application.html.erb (Duration: 38.4ms | Allocations: 15144)
+Completed 200 OK in 42ms (Views: 38.4ms | ActiveRecord: 1.7ms | Allocations: 15440)
+
+
+Started GET "/feedback/1/new" for 127.0.0.1 at 2023-08-27 22:04:25 +0800
+Processing by FeedbacksController#new as HTML
+  Parameters: {"id"=>"1"}
+  Rendering layout layouts/application.html.erb
+  Rendering feedbacks/new.html.erb within layouts/application
+  Rendered feedbacks/_flashes.html.erb (Duration: 0.8ms | Allocations: 362)
+  Rendered feedbacks/new.html.erb within layouts/application (Duration: 10.3ms | Allocations: 2731)
+  Rendered layout layouts/application.html.erb (Duration: 30.5ms | Allocations: 9245)
+Completed 200 OK in 34ms (Views: 32.0ms | ActiveRecord: 0.0ms | Allocations: 9638)
+
+
+Started GET "/" for 127.0.0.1 at 2023-08-28 00:06:16 +0800
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by BlogsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering blogs/index.html.erb within layouts/application
+  Rendered blogs/_flashes.html.erb (Duration: 3.4ms | Allocations: 550)
+  [1m[36mBlog Load (0.6ms)[0m  [1m[34mSELECT "blogs".* FROM "blogs"[0m
+  ↳ app/views/blogs/index.html.erb:2
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 13], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 14], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 15], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 16], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.1ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 17], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 18], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 19], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 20], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.3ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 21], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  [1m[36mAuthor Load (0.2ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = ? LIMIT ?[0m  [["id", 22], ["LIMIT", 1]]
+  ↳ app/views/blogs/index.html.erb:5
+  Rendered blogs/index.html.erb within layouts/application (Duration: 104.7ms | Allocations: 21676)
+  Rendered layout layouts/application.html.erb (Duration: 392.4ms | Allocations: 78453)
+Completed 200 OK in 2179ms (Views: 412.4ms | ActiveRecord: 3.4ms | Allocations: 373811)
+
+
