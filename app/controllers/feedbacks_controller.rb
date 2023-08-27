@@ -5,7 +5,7 @@ class FeedbacksController < ApplicationController
 
   def create
     blog = Blog.find(feedback_params[:blog_id])
-    author = Author.find(blog.id)
+    author = Author.find(blog.author_id)
     feedback = Feedback.new(feedback_params)
     if feedback.save
       FeedbackMailer.feedback_mailer(author, feedback).deliver_now
