@@ -12,10 +12,15 @@ In addition to that, Rails also comes with:
 
 ## Dependencies or Bundles Installed
 
+1. Add `rspec-rails` to **both** the `:development` and `:test` groups
+   of your app’s `Gemfile`:
+
     # Run against this stable release
     group :development, :test do
         gem 'rspec-rails', '~> 6.0.0'
     end
+
+2. Then, in your project directory:
 
     # Download and install
     $ bundle install
