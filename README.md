@@ -1,6 +1,23 @@
 <a name="readme-top"></a>
 <!-- PROJECT LOGO -->
 <br />
+
+## Frameworks and libraries
+
+[Active Record], [Active Model], [Action Pack], and [Action View] can each be used independently outside Rails.
+
+In addition to that, Rails also comes with:
+
+- [Action Mailer], a library to generate and send emails
+
+## Dependencies or Bundles Installed
+
+    ```ruby
+    # Run against this stable release
+    group :development, :test do
+        gem 'rspec-rails', '~> 6.0.0'
+    end
+
 ## Getting Started
 
 1. Install Rails at the command prompt if you haven't yet:
@@ -16,7 +33,7 @@
 3. Change directory to `myapp` and start the web server:
 
         $ cd myapp
-        $ bin/rails server
+        $ rails s
 
    Run with `--help` or `-h` for options.
 
