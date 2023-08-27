@@ -15,15 +15,19 @@ In addition to that, Rails also comes with:
 1. Add `rspec-rails` to **both** the `:development` and `:test` groups
    of your app’s `Gemfile`:
 
+    ```ruby
     # Run against this stable release
     group :development, :test do
         gem 'rspec-rails', '~> 6.0.0'
     end
+    ```
 
 2. Then, in your project directory:
 
+    ```sh
     # Download and install
     $ bundle install
+    ```
 
 ## Getting Started
 
