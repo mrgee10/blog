@@ -4,8 +4,11 @@ class FeedbacksController < ApplicationController
   end
 
   def create
+    blog = Blog.find(feedback_params[:blog_id])
+    author = Author.find(blog.id)
     feedback = Feedback.new(feedback_params)
     if feedback.save
+      FeedbackMailer.feedback_mailer(author, feedback).deliver_now
       flash[:success] = "New feedback has been posted..."
       redirect_to "/"
     else
