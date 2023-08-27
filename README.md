@@ -6,7 +6,6 @@
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-* [![Next][Next.js]][Next-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 
 ## Frameworks and libraries
@@ -19,13 +18,16 @@ In addition to that, Rails also comes with:
 
 ## Dependencies or Bundles Installed
 
-1. Add `rspec-rails` to **both** the `:development` and `:test` groups
+1. Add `rspec-rails` `letter_opener` `factory_bot_rails` `faker` to **both** the `:development` and `:test` groups
    of your app’s `Gemfile`:
 
     ```ruby
     # Run against this stable release
     group :development, :test do
-        gem 'rspec-rails', '~> 6.0.0'
+        gem 'letter_opener'
+        gem 'rspec-rails'
+        gem 'factory_bot_rails'
+        gem 'faker'
     end
     ```
 
