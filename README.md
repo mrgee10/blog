@@ -12,11 +12,13 @@ In addition to that, Rails also comes with:
 
 ## Dependencies or Bundles Installed
 
-    ```ruby
     # Run against this stable release
     group :development, :test do
         gem 'rspec-rails', '~> 6.0.0'
     end
+
+    # Download and install
+    $ bundle install
 
 ## Getting Started
 
